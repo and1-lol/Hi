@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DVD Logo Bounce</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            overflow: hidden;
+        }
+        #logo {
+            position: absolute;
+            width: 150px;
+            height: 70px;
+            background-color: #00ff00;
+            color: black;
+            font-family: 'Arial Black', Impact, sans-serif;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="logo">DVD</div>
+
+    <script>
+        const logo = document.getElementById('logo');
+        
+        // Initial position
+        let x = Math.random() * (window.innerWidth - 150);
+        let y = Math.random() * (window.innerHeight - 70);
+        
+        // Speed and direction (pixels per frame)
+        let dx = 3;
+        let dy = 3;
+
+        // List of colors to cycle through on bounce
+        const colors = ['#00ff00', '#ff00ff', '#00ffff', '#ffff00', '#ff0000', '#0000ff', '#ffffff'];
+
+        function changeColor() {
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            logo.style.backgroundColor = randomColor;
+        }
+
+        function update() {
+            // Move the logo
+            x += dx;
+            y += dy;
+
+            // Get current screen dimensions
+            const maxX = window.innerWidth - logo.offsetWidth;
+            const maxY = window.innerHeight - logo.offsetHeight;
+
+            // Check horizontal collision
+            if (x >= maxX || x <= 0) {
+                dx = -dx; // Reverse horizontal direction
+                x = Math.max(0, Math.min(x, maxX)); // Keep inside bounds
+                changeColor();
+            }
+
+            // Check vertical collision
+            if (y >= maxY || y <= 0) {
+                dy = -dy; // Reverse vertical direction
+                y = Math.max(0, Math.min(y, maxY)); // Keep inside bounds
+                changeColor();
+            }
+
+            // Apply new positions
+            logo.style.left = x + 'px';
+            logo.style.top = y + 'px';
+
+            // Run next frame
+            requestAnimationFrame(update);
+        }
+
+        // Handle window resizing without breaking the loop
+        window.addEventListener('resize', () => {
+            x = Math.min(x, window.innerWidth - logo.offsetWidth);
+            y = Math.min(y, window.innerHeight - logo.offsetHeight);
+        });
+
+        // Initialize background color and start animation
+        changeColor();
+        update();
+    </script>
+</body>
+</html>
